@@ -41,7 +41,7 @@ jobs:
       run: cargo install cargo-tarpaulin
     
     - name: Run tests with coverage
-      run: cargo tarpaulin --verbose --workspace --timeout 300 --fail-under 4.5 --out Xml --out Stdout
+      run: cargo tarpaulin --verbose --workspace --fail-under 4.5 --out Xml --out Stdout
     
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v4
