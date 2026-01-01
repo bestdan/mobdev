@@ -34,6 +34,6 @@ mod tests {
     fn test_filter_basic() {
         // Basic test to ensure the module compiles
         let suffixes = vec![".g.dart".to_string()];
-        assert!(suffixes.len() > 0);
+        assert!(!suffixes.is_empty());
     }
 }

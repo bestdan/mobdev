@@ -1,9 +1,9 @@
 use anyhow::Result;
 
 pub fn check(
-    staged: bool,
-    unstaged: bool,
-    all: bool,
+    _staged: bool,
+    _unstaged: bool,
+    _all: bool,
     base_branch: &str,
     verbose: bool,
 ) -> Result<()> {

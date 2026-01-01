@@ -1,9 +1,9 @@
 use anyhow::Result;
 
 pub fn fix_check(
-    staged: bool,
-    unstaged: bool,
-    all: bool,
+    _staged: bool,
+    _unstaged: bool,
+    _all: bool,
     base_branch: &str,
     verbose: bool,
 ) -> Result<()> {
@@ -16,9 +16,9 @@ pub fn fix_check(
 }
 
 pub fn analyze_check(
-    staged: bool,
-    unstaged: bool,
-    all: bool,
+    _staged: bool,
+    _unstaged: bool,
+    _all: bool,
     base_branch: &str,
     verbose: bool,
 ) -> Result<()> {
