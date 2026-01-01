@@ -84,6 +84,27 @@ pub fn is_main_branch<P: AsRef<Path>>(cwd: Option<P>, main_branch: &str) -> Resu
     Ok(current == main_branch)
 }
 
+/// Helper function to execute git diff and collect files
+fn git_diff_files<P: AsRef<Path>>(path: P, args: &[&str]) -> Result<Vec<String>> {
+    let mut cmd = Command::new("git");
+    cmd.arg("diff").arg("--name-only");
+    
+    for arg in args {
+        cmd.arg(arg);
+    }
+    
+    let output = cmd.current_dir(path.as_ref())
+        .output()
+        .context("Failed to execute git diff")?;
+
+    if output.status.success() {
+        let file_list = String::from_utf8_lossy(&output.stdout);
+        Ok(file_list.lines().map(|s| s.to_string()).collect())
+    } else {
+        Ok(Vec::new())
+    }
+}
+
 /// Gets changed files in the repository.
 pub fn get_changed_files<P: AsRef<Path>>(
     cwd: Option<P>,
@@ -100,71 +121,18 @@ pub fn get_changed_files<P: AsRef<Path>>(
     let mut files = Vec::new();
 
     if all || (!staged && !unstaged) {
-        // Get all changed files
-        let output = Command::new("git")
-            .arg("diff")
-            .arg("--name-only")
-            .arg(format!("{}...HEAD", base_branch))
-            .current_dir(path)
-            .output()
-            .context("Failed to execute git diff")?;
-
-        if output.status.success() {
-            let file_list = String::from_utf8_lossy(&output.stdout);
-            files.extend(file_list.lines().map(|s| s.to_string()));
-        }
-
+        // Get all changed files vs base branch
+        files.extend(git_diff_files(path, &[&format!("{}...HEAD", base_branch)])?);
+        
         // Add staged files
-        let output = Command::new("git")
-            .arg("diff")
-            .arg("--name-only")
-            .arg("--cached")
-            .current_dir(path)
-            .output()
-            .context("Failed to execute git diff --cached")?;
-
-        if output.status.success() {
-            let file_list = String::from_utf8_lossy(&output.stdout);
-            files.extend(file_list.lines().map(|s| s.to_string()));
-        }
-
+        files.extend(git_diff_files(path, &["--cached"])?);
+        
         // Add unstaged files
-        let output = Command::new("git")
-            .arg("diff")
-            .arg("--name-only")
-            .current_dir(path)
-            .output()
-            .context("Failed to execute git diff")?;
-
-        if output.status.success() {
-            let file_list = String::from_utf8_lossy(&output.stdout);
-            files.extend(file_list.lines().map(|s| s.to_string()));
-        }
+        files.extend(git_diff_files(path, &[])?);
     } else if staged {
-        let output = Command::new("git")
-            .arg("diff")
-            .arg("--name-only")
-            .arg("--cached")
-            .current_dir(path)
-            .output()
-            .context("Failed to execute git diff --cached")?;
-
-        if output.status.success() {
-            let file_list = String::from_utf8_lossy(&output.stdout);
-            files.extend(file_list.lines().map(|s| s.to_string()));
-        }
+        files.extend(git_diff_files(path, &["--cached"])?);
     } else if unstaged {
-        let output = Command::new("git")
-            .arg("diff")
-            .arg("--name-only")
-            .current_dir(path)
-            .output()
-            .context("Failed to execute git diff")?;
-
-        if output.status.success() {
-            let file_list = String::from_utf8_lossy(&output.stdout);
-            files.extend(file_list.lines().map(|s| s.to_string()));
-        }
+        files.extend(git_diff_files(path, &[])?);
     }
 
     // Remove duplicates and empty strings
