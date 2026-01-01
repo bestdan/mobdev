@@ -25,7 +25,7 @@ tempfile = "3.13"
 [package.metadata.tarpaulin]
 # Coverage thresholds based on current coverage levels
 # Minimum line coverage percentage to pass
-line-coverage = 4.5
+line-coverage = 17.00
 # Generate HTML report for detailed analysis
 out = ["Html", "Stdout"]
 # Timeout for tests (in seconds)
