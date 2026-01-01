@@ -5,14 +5,17 @@ use predicates::prelude::*;
 fn test_cli_version() {
     let mut cmd = Command::cargo_bin("mobdev").unwrap();
     cmd.arg("--version");
-    cmd.assert().success().stdout(predicate::str::contains("0.15.0"));
+    cmd.assert()
+        .success()
+        .stdout(predicate::str::contains("0.1.0"));
 }
 
 #[test]
 fn test_cli_help() {
     let mut cmd = Command::cargo_bin("mobdev").unwrap();
     cmd.arg("--help");
-    cmd.assert().success()
+    cmd.assert()
+        .success()
         .stdout(predicate::str::contains("Mobile developer utility package"));
 }
 
@@ -29,7 +32,8 @@ fn test_git_root() {
     let mut cmd = Command::cargo_bin("mobdev").unwrap();
     cmd.arg("git").arg("root");
     // Should succeed and output a path
-    cmd.assert().success()
+    cmd.assert()
+        .success()
         .stdout(predicate::str::contains("mobdev"));
 }
 
@@ -38,7 +42,8 @@ fn test_git_branch() {
     let mut cmd = Command::cargo_bin("mobdev").unwrap();
     cmd.arg("git").arg("branch");
     // Should succeed and output a branch name
-    cmd.assert().success()
+    cmd.assert()
+        .success()
         .stdout(predicate::str::is_empty().not());
 }
 
@@ -52,23 +57,29 @@ fn test_check_externals() {
 
 #[test]
 fn test_files_filter_suffix() {
-    use std::process::{Command as StdCommand, Stdio};
     use std::io::Write;
+    use std::process::{Command as StdCommand, Stdio};
 
     let mut cmd = StdCommand::new("cargo");
-    cmd.args(["run", "--bin", "mobdev", "--", "files", "filter", "suffix", ".g.dart"]);
+    cmd.args([
+        "run", "--bin", "mobdev", "--", "files", "filter", "suffix", ".g.dart",
+    ]);
     cmd.stdin(Stdio::piped());
     cmd.stdout(Stdio::piped());
-    
+
     let mut child = cmd.spawn().expect("Failed to spawn command");
-    
+
     if let Some(mut stdin) = child.stdin.take() {
-        stdin.write_all(b"file1.dart\nfile2.g.dart\nfile3.dart\n").unwrap();
+        stdin
+            .write_all(b"file1.dart\nfile2.g.dart\nfile3.dart\n")
+            .unwrap();
     }
-    
-    let output = child.wait_with_output().expect("Failed to wait for command");
+
+    let output = child
+        .wait_with_output()
+        .expect("Failed to wait for command");
     let stdout = String::from_utf8_lossy(&output.stdout);
-    
+
     // Should filter out .g.dart files
     assert!(stdout.contains("file1.dart"));
     assert!(!stdout.contains("file2.g.dart"));

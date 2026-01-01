@@ -1,19 +1,15 @@
 [package]
 name = "mobdev"
-version = "0.15.0"
+version = "0.1.0"
 edition = "2021"
-authors = ["Dan Best"]
-description = "Mobile developer utility package - Rust implementation of TSU"
+authors = ["Dan Egan"]
+description = "Mobile developer utility package"
 license = "MIT"
 repository = "https://github.com/bestdan/mobdev"
 readme = "README.md"
 
 [[bin]]
 name = "mobdev"
-path = "src/main.rs"
-
-[[bin]]
-name = "mdu"
 path = "src/main.rs"
 
 [dependencies]
