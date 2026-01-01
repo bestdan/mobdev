@@ -28,12 +28,10 @@ pub fn filter_files_by_suffix(suffixes: &[String], verbose: bool) -> Result<(), 
 
 #[cfg(test)]
 mod tests {
-    use super::*;
-
     #[test]
     fn test_filter_basic() {
         // Basic test to ensure the module compiles
-        let suffixes = vec![".g.dart".to_string()];
+        let suffixes = [".g.dart".to_string()];
         assert!(!suffixes.is_empty());
     }
 }

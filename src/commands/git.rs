@@ -1,7 +1,10 @@
 pub mod codeowners;
 
+use crate::utils::git::{
+    get_changed_files, get_current_branch, get_files_to_push, get_git_root, is_git_repo,
+    is_main_branch,
+};
 use anyhow::Result;
-use crate::utils::git::{is_git_repo, get_git_root, get_current_branch, is_main_branch, get_changed_files, get_files_to_push};
 
 pub fn check(path: Option<String>, verbose: bool) -> Result<()> {
     let target_path = path.as_deref().unwrap_or(".");
@@ -135,10 +138,8 @@ pub fn commit_msg(commit: bool, verbose: bool) -> Result<()> {
         eprintln!("This feature is not yet fully implemented");
     }
 
-    if commit {
-        if verbose {
-            eprintln!("Auto-commit flag set");
-        }
+    if commit && verbose {
+        eprintln!("Auto-commit flag set");
     }
 
     anyhow::bail!("Claude integration not yet implemented");

@@ -1,5 +1,5 @@
-use anyhow::Result;
 use crate::utils::shell::is_command_installed;
+use anyhow::Result;
 
 pub fn externals(verbose: bool) -> Result<()> {
     let commands = vec![
@@ -13,7 +13,7 @@ pub fn externals(verbose: bool) -> Result<()> {
 
     for (cmd, name) in &commands {
         let installed = is_command_installed(cmd);
-        
+
         if verbose {
             if installed {
                 eprintln!("✓ {} is installed", name);

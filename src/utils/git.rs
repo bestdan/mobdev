@@ -1,4 +1,4 @@
-use anyhow::{Result, Context};
+use anyhow::{Context, Result};
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -19,8 +19,7 @@ pub fn is_git_repo<P: AsRef<Path>>(cwd: Option<P>) -> bool {
         .current_dir(path)
         .output()
         .map(|output| {
-            output.status.success()
-                && String::from_utf8_lossy(&output.stdout).trim() == "true"
+            output.status.success() && String::from_utf8_lossy(&output.stdout).trim() == "true"
         })
         .unwrap_or(false)
 }
@@ -88,12 +87,13 @@ pub fn is_main_branch<P: AsRef<Path>>(cwd: Option<P>, main_branch: &str) -> Resu
 fn git_diff_files<P: AsRef<Path>>(path: P, args: &[&str]) -> Result<Vec<String>> {
     let mut cmd = Command::new("git");
     cmd.arg("diff").arg("--name-only");
-    
+
     for arg in args {
         cmd.arg(arg);
     }
-    
-    let output = cmd.current_dir(path.as_ref())
+
+    let output = cmd
+        .current_dir(path.as_ref())
         .output()
         .context("Failed to execute git diff")?;
 
@@ -123,10 +123,10 @@ pub fn get_changed_files<P: AsRef<Path>>(
     if all || (!staged && !unstaged) {
         // Get all changed files vs base branch
         files.extend(git_diff_files(path, &[&format!("{}...HEAD", base_branch)])?);
-        
+
         // Add staged files
         files.extend(git_diff_files(path, &["--cached"])?);
-        
+
         // Add unstaged files
         files.extend(git_diff_files(path, &[])?);
     } else if staged {

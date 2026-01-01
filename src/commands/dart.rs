@@ -1,8 +1,10 @@
 pub mod dcm;
 
+use crate::utils::dart::{
+    find_dart_package_root, find_file_package_root, is_dart_package, is_generated_dart_file,
+};
+use crate::utils::git::{get_changed_files, is_git_repo};
 use anyhow::Result;
-use crate::utils::dart::{is_dart_package, find_dart_package_root, find_file_package_root, is_generated_dart_file};
-use crate::utils::git::{is_git_repo, get_changed_files};
 
 pub fn check(path: Option<String>, verbose: bool) -> Result<()> {
     let target_path = path.as_deref();
@@ -71,7 +73,7 @@ pub fn changed(
     }
 
     let files = get_changed_files(None::<&str>, base_branch, staged, unstaged, all)?;
-    
+
     // Filter to only Dart files, excluding generated ones
     let dart_files: Vec<String> = files
         .into_iter()
@@ -108,12 +110,7 @@ pub fn changed_downstream(
     changed(staged, unstaged, all, base_branch, false)
 }
 
-pub fn fix(
-    verbose: bool,
-    files: Option<Vec<String>>,
-    apply: bool,
-    packages: bool,
-) -> Result<()> {
+pub fn fix(verbose: bool, files: Option<Vec<String>>, apply: bool, packages: bool) -> Result<()> {
     if verbose {
         eprintln!("Dart fix functionality");
         if let Some(ref f) = files {

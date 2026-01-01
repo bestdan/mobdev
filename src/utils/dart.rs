@@ -36,7 +36,7 @@ pub fn find_dart_package_root<P: AsRef<Path>>(cwd: Option<P>) -> Option<PathBuf>
 /// Finds the package root containing a specific file.
 pub fn find_file_package_root<P: AsRef<Path>>(file_path: P) -> Option<PathBuf> {
     let path = file_path.as_ref();
-    
+
     if let Some(parent) = path.parent() {
         find_dart_package_root(Some(parent))
     } else {
@@ -45,12 +45,8 @@ pub fn find_file_package_root<P: AsRef<Path>>(file_path: P) -> Option<PathBuf> {
 }
 
 /// Common Dart codegen suffixes to filter out.
-pub const COMMON_DART_CODEGEN_SUFFIXES: &[&str] = &[
-    ".g.dart",
-    ".freezed.dart",
-    ".gr.dart",
-    ".gql.dart",
-];
+pub const COMMON_DART_CODEGEN_SUFFIXES: &[&str] =
+    &[".g.dart", ".freezed.dart", ".gr.dart", ".gql.dart"];
 
 /// Filters Dart files that are generated.
 pub fn is_generated_dart_file(file: &str) -> bool {
