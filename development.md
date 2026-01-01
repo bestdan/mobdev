@@ -34,6 +34,11 @@ Run all checks (format, lint, and test):
 cargo fmt --check && cargo clippy --all-targets --all-features -- -D warnings && cargo test
 ```
 
+Or use the convenience script:
+```sh
+./check.sh
+```
+
 ### Running
 
 ```sh
