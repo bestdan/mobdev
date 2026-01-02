@@ -1,11 +1,12 @@
-pub mod format;
 pub mod analysis;
-pub mod fix;
 pub mod dcm;
+pub mod fix;
+pub mod format;
 pub mod graphql;
 
 use anyhow::Result;
 
+#[allow(clippy::too_many_arguments)]
 pub fn collate(
     staged: bool,
     unstaged: bool,

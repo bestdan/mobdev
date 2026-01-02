@@ -1,19 +1,22 @@
-use anyhow::{Result, bail};
+use anyhow::{bail, Result};
 use regex::Regex;
 use std::process::Command;
 
 /// Regex pattern for validating safe shell inputs.
 /// Allows: alphanumeric, dots, underscores, slashes, spaces, and dashes.
 /// Rejects: quotes, backticks, dollar signs, semicolons, pipes, ampersands, redirects, wildcards, etc.
+#[allow(dead_code)]
 const SAFE_SHELL_INPUT_PATTERN: &str = r"^[a-zA-Z0-9._/\s-]+$";
 
 /// Escapes a shell argument to prevent injection attacks.
 /// Uses single-quote escaping which is safe for most shells.
+#[allow(dead_code)]
 pub fn escape_shell_arg(arg: &str) -> String {
     format!("'{}'", arg.replace('\'', r"'\''"))
 }
 
 /// Validates that a string contains only safe characters for use in shell commands.
+#[allow(dead_code)]
 pub fn is_safe_shell_input(input: &str) -> bool {
     let re = Regex::new(SAFE_SHELL_INPUT_PATTERN).unwrap();
     re.is_match(input)
@@ -21,6 +24,7 @@ pub fn is_safe_shell_input(input: &str) -> bool {
 
 /// Validates and escapes a shell argument.
 /// Throws an error if the input contains potentially dangerous characters.
+#[allow(dead_code)]
 pub fn safe_shell_arg(arg: &str, allow_unsafe: bool) -> Result<String> {
     if !allow_unsafe && !is_safe_shell_input(arg) {
         bail!(
